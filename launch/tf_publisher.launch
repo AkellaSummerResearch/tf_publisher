@@ -1,16 +1,11 @@
 <launch>
-
+<param name="/use_sim_time" value="true" /> 
   <node pkg="arena_tf_publisher"
     type="tf_publisher"
     name="tf_publisher"
     output="screen">
 
     <rosparam param="QuadList"> ["valkyrie", "phoenix"] </rosparam>
-
-     <param name="arenaCenterX" value="-742043.55"/> <!--ECEF-->
-     <param name="arenaCenterY" value="-5462198.63"/>
-     <param name="arenaCenterZ" value="3198003.982"/>
-
 
   </node>
 </launch>

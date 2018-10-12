@@ -6,6 +6,8 @@
 #include <Eigen/Dense>
 #include "std_msgs/String.h"
 
+std::string ns;
+
 void poseCallback(const nav_msgs::Odometry::ConstPtr& msg){
   static tf::TransformBroadcaster br;
   // ROS_INFO("Publishing into frame: %s", msg->header.frame_id.c_str());
@@ -18,7 +20,7 @@ void poseCallback(const nav_msgs::Odometry::ConstPtr& msg){
                    msg->pose.pose.orientation.z,
                    msg->pose.pose.orientation.w);
   transform.setRotation(q);
-  br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), msg->header.frame_id, "base_link"));
+  br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), msg->header.frame_id, ns + "/base_link"));
 
 }
 
@@ -26,8 +28,12 @@ int main(int argc, char** argv){
   ros::init(argc, argv, "arena_tf_broadcaster");
   ros::NodeHandle node("~");
   ROS_INFO("Tf broadcaster started!");
+  node.getParam("namespace", ns);
 
-  ros::Subscriber sub = node.subscribe<nav_msgs::Odometry>("/mavros/local_position/odom", 1, poseCallback);
+  // ns = ros::this_node::getNamespace();
+  std::string topic = "/" + ns + "/mavros/local_position/odom";
+  ros::Subscriber sub = node.subscribe<nav_msgs::Odometry>(topic, 1, poseCallback);
+  ROS_INFO("Tf broadcaster listening to: %s", sub.getTopic().c_str());
 
   // Get all quad names and create a subscriber for each one of them
   // std::vector<std::string> quadNames;

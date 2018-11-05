@@ -20,6 +20,7 @@ void poseCallback(const nav_msgs::Odometry::ConstPtr& msg){
                    msg->pose.pose.orientation.z,
                    msg->pose.pose.orientation.w);
   transform.setRotation(q);
+  // ROS_INFO("Time: %f", ros::Time::now().toSec());
   br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), msg->header.frame_id, ns + "/base_link"));
 
 }

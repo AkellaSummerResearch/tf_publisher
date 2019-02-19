@@ -7,6 +7,7 @@
 #include "std_msgs/String.h"
 
 std::string ns;
+std::string input_topic;
 
 void poseCallback(const nav_msgs::Odometry::ConstPtr& msg){
   static tf::TransformBroadcaster br;
@@ -30,10 +31,11 @@ int main(int argc, char** argv){
   ros::NodeHandle node("~");
   ROS_INFO("Tf broadcaster started!");
   node.getParam("namespace", ns);
+  node.getParam("input_odometry", input_topic);
 
   // ns = ros::this_node::getNamespace();
-  std::string topic = "/" + ns + "/mavros/local_position/odom";
-  ros::Subscriber sub = node.subscribe<nav_msgs::Odometry>(topic, 1, poseCallback);
+  // std::string topic = "/" + ns + "/mavros/local_position/odom";
+  ros::Subscriber sub = node.subscribe<nav_msgs::Odometry>(input_topic, 1, poseCallback);
   ROS_INFO("Tf broadcaster listening to: %s", sub.getTopic().c_str());
 
   // Get all quad names and create a subscriber for each one of them
